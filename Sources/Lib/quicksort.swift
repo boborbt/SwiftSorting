@@ -15,38 +15,61 @@ func selectPivotIndex(hint pivotHint:Int?, start:Int, end:Int) -> Int {
   return start + Int(arc4random_uniform(UInt32(end - start)))
 }
 
-func partition<T>(array: inout [T], start:Int, end: Int, pivotHint:Int? = nil, lessThan: (T,T) -> Bool) -> Int {
-  let pivotIndex = selectPivotIndex(hint:pivotHint, start:start, end:end)
+// func partition<T>(array: inout [T], start:Int, end: Int, pivotHint:Int? = nil, lessThan: (T,T) -> Bool) -> Int {
+//   let pivotIndex = selectPivotIndex(hint:pivotHint, start:start, end:end)
+//   let pivot = array[pivotIndex]
+//
+//   arraySwap(&array, pivotIndex, end)
+//   var leftBound = start - 1
+//   var rightBound = start
+//
+//   while rightBound < end {
+//     if !lessThan(pivot, array[rightBound]) {
+//       leftBound += 1
+//       arraySwap(&array,leftBound,rightBound)
+//     }
+//     rightBound += 1
+//   }
+//
+//   arraySwap(&array, leftBound+1, end)
+//
+//   return leftBound+1
+// }
+
+func partition<T>(array: inout [T], start first:Int, end last:Int, pivotHint:Int? = nil, compare: (T,T) -> Int) -> Int{
+  let pivotIndex = selectPivotIndex(hint:pivotHint, start:first, end:last)
   let pivot = array[pivotIndex]
 
-  arraySwap(&array, pivotIndex, end)
-  var leftBound = start - 1
-  var rightBound = start
+  arraySwap(&array, first, pivotIndex);
 
-  while rightBound < end {
-    if !lessThan(pivot, array[rightBound]) {
-      leftBound += 1
-      arraySwap(&array,leftBound,rightBound)
+  var i = first+1
+  var j = last;
+  while i<=j {
+    if compare(array[i], pivot) < 0 {
+      i+=1
+    } else if compare(array[j],pivot) > 0 {
+      j-=1
+    } else {
+      arraySwap(&array, i, j);
+      i+=1
+      j-=1
     }
-    rightBound += 1
   }
-
-  arraySwap(&array, leftBound+1, end)
-
-  return leftBound+1
+  arraySwap(&array, first, j);
+  return j;
 }
 
-func quicksort<T>(_ array: inout [T], start:Int, end:Int, lessThan: (T,T) -> Bool) {
+func quicksort<T>(_ array: inout [T], start:Int, end:Int, compare: (T,T) -> Int) {
   if end <= start {
     return
   }
 
-  let pivotIndex = partition(array:&array, start:start, end:end, lessThan:lessThan)
+  let pivotIndex = partition(array:&array, start:start, end:end, compare:compare)
 
-  quicksort(&array, start:start, end:pivotIndex-1, lessThan:lessThan)
-  quicksort(&array, start:pivotIndex+1, end:end, lessThan:lessThan)
+  quicksort(&array, start:start, end:pivotIndex-1, compare:compare)
+  quicksort(&array, start:pivotIndex+1, end:end, compare:compare)
 }
 
-public func quicksort<T>(_ array: inout [T], lessThan: (T,T) -> Bool) {
-  quicksort(&array, start:0, end: array.count - 1, lessThan: lessThan)
+public func quicksort<T>(_ array: inout [T], compare: (T,T) -> Int) {
+  quicksort(&array, start:0, end: array.count - 1, compare: compare)
 }
