@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Record: Equatable {
+public struct Record {
   public var id: Int
   public var field1:String
   public var field2:Int
