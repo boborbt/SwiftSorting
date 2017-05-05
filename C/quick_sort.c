@@ -150,6 +150,6 @@ void quick_sort(void** array, size_t count, KIComparator compare) {
   if(count == 0) {
     return;
   }
-  // quick_sort_standard(array, 0, count-1, compare);
-  quick_sort_3_way(array, 0, count-1, compare);
+  quick_sort_standard(array, 0, count-1, compare);
+  // quick_sort_3_way(array, 0, count-1, compare);
 }
