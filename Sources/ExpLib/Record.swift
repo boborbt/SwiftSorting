@@ -2,11 +2,11 @@ import Foundation
 
 public struct Record {
   public var id: Int
-  public var field1:String
+  public var field1:UnsafeMutablePointer<CChar>
   public var field2:Int
   public var field3:Double
 
-    init(id: Int, field1:String, field2:Int, field3:Double) {
+    init(id: Int, field1:UnsafeMutablePointer<CChar>, field2:Int, field3:Double) {
         self.id = id
         self.field1 = field1
         self.field2 = field2
@@ -37,7 +37,7 @@ public func parse(_ string:UnsafeMutablePointer<CChar>) -> Record {
            } else {
               result = Record(
                 id:id,
-                field1: String(cString:buf),
+                field1: strdup(buf),
                 field2:field2,
                 field3:field3
               )
