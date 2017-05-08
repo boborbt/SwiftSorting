@@ -1,7 +1,7 @@
 import Darwin
 import Foundation
 
-func arraySwap<T>(_ array:inout [T], _ index1:Int, _ index2:Int) {
+func arraySwap<T>(_ array:inout UnsafeMutableBufferPointer<T>, _ index1:Int, _ index2:Int) {
   if index1 != index2 {
     swap(&array[index1], &array[index2])
   }
@@ -36,7 +36,7 @@ func selectPivotIndex(hint pivotHint:Int?, start:Int, end:Int) -> Int {
 //   return leftBound+1
 // }
 
-func partition<T>(array: inout [T], start first:Int, end last:Int, pivotHint:Int? = nil, compare: (T,T) -> Int) -> Int{
+func partition<T>(array: inout UnsafeMutableBufferPointer<T>, start first:Int, end last:Int, pivotHint:Int? = nil, compare: (T,T) -> Int) -> Int{
   let pivotIndex = selectPivotIndex(hint:pivotHint, start:first, end:last)
   let pivot = array[pivotIndex]
 
@@ -59,7 +59,7 @@ func partition<T>(array: inout [T], start first:Int, end last:Int, pivotHint:Int
   return j;
 }
 
-func quicksort<T>(_ array: inout [T], start:Int, end:Int, compare: (T,T) -> Int) {
+func quicksort<T>(_ array: inout UnsafeMutableBufferPointer<T>, start:Int, end:Int, compare: (T,T) -> Int) {
   if end <= start {
     return
   }
@@ -71,5 +71,9 @@ func quicksort<T>(_ array: inout [T], start:Int, end:Int, compare: (T,T) -> Int)
 }
 
 public func quicksort<T>(_ array: inout [T], compare: (T,T) -> Int) {
-  quicksort(&array, start:0, end: array.count - 1, compare: compare)
+  print("array.count \(array.count)")
+  array.withUnsafeMutableBufferPointer { buffer in
+    print("end index: \(buffer.endIndex)")
+    quicksort(&buffer, start:buffer.startIndex, end: buffer.endIndex - 1, compare: compare)
+  }
 }

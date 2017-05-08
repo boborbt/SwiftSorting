@@ -44,12 +44,12 @@ for line in fileLines {
 print("Sorting...")
 
 let startTime = CFAbsoluteTimeGetCurrent()
-// quicksort(&array, compare: { (r1:Record, r2:Record) -> Int in
-//   return r1.field2 - r2.field2
-// })
-array.sort(by:{ (r1:Record, r2:Record) -> Bool in
-  return r1.field2 < r2.field2
+quicksort(&array, compare: { (r1:Record, r2:Record) -> Int in
+  return r1.field2 - r2.field2
 })
+// array.sort(by:{ (r1:Record, r2:Record) -> Bool in
+//   return r1.field2 < r2.field2
+// })
 let endTime = CFAbsoluteTimeGetCurrent()
 
 print("Elapsed: \(endTime - startTime)s")
